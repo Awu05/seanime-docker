@@ -7,7 +7,6 @@ services:
     group_add:
       - video
     environment:
-      - SEANIME_SERVER_HOST=0.0.0.0 # default; set to a specific hostname or IP to override
       - NVIDIA_VISIBLE_DEVICES=all # or '0' for first GPU
       - NVIDIA_DRIVER_CAPABILITIES=all
     ports:
