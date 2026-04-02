@@ -2,6 +2,8 @@ services:
   seanime:
     image: umagistr/seanime:latest
     container_name: seanime
+    environment:
+      - SEANIME_SERVER_HOST=0.0.0.0 # default; set to a specific hostname or IP to override
     ports:
       - "3211:43211"
     volumes:

@@ -68,6 +68,8 @@ COPY --from=go-builder /tmp/build/seanime /app/
 WORKDIR /app
 EXPOSE 43211
 
+ENV SEANIME_SERVER_HOST=0.0.0.0
+
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:43211 || exit 1
 
@@ -89,6 +91,8 @@ COPY --from=go-builder --chown=1000:1000 /tmp/build/seanime /app/
 USER 1000
 WORKDIR /app
 EXPOSE 43211
+
+ENV SEANIME_SERVER_HOST=0.0.0.0
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:43211 || exit 1
@@ -125,6 +129,8 @@ COPY --from=go-builder --chown=1000:1000 /tmp/build/seanime /app/
 USER 1000
 WORKDIR /app
 EXPOSE 43211
+
+ENV SEANIME_SERVER_HOST=0.0.0.0
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:43211 || exit 1

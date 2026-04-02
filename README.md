@@ -34,6 +34,8 @@ services:
   seanime:
     image: umagistr/seanime:latest
     container_name: seanime
+    environment:
+      - SEANIME_SERVER_HOST=0.0.0.0
     volumes:
       - /mnt/user/anime:/anime
       - /mnt/user/downloads:/downloads
@@ -54,6 +56,19 @@ Check the [examples](./examples) directory for complete configurations:
   setup.
 
 ## Configuration
+
+### Environment Variables
+
+| Variable              | Default   | Description                                             |
+| --------------------- | --------- | ------------------------------------------------------- |
+| `SEANIME_SERVER_HOST` | `0.0.0.0` | The host address Seanime binds to inside the container. |
+
+By default, `SEANIME_SERVER_HOST` is set to `0.0.0.0`, which means Seanime listens on all network interfaces and is accessible from outside the container (e.g. via `localhost` on the host machine). To restrict Seanime to a specific interface or hostname, set this variable to the desired address:
+
+```yaml
+environment:
+  - SEANIME_SERVER_HOST=<HOST_IP>
+```
 
 ### Ports
 
@@ -108,6 +123,7 @@ services:
     image: umagistr/seanime:latest-cuda
     runtime: nvidia
     environment:
+      - SEANIME_SERVER_HOST=0.0.0.0
       - NVIDIA_VISIBLE_DEVICES=all
     # ... other config
 ```
