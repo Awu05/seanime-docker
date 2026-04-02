@@ -1,6 +1,16 @@
 # syntax=docker/dockerfile:1.4
 
-# Stage 1: Node.js Builder
+# Stage 1: Clone Seanime Source
+FROM --platform=$BUILDPLATFORM alpine:latest AS source
+
+RUN apk add --no-cache git
+
+ARG SEANIME_VERSION=main
+
+WORKDIR /src
+RUN git clone --depth 1 --branch ${SEANIME_VERSION} https://github.com/5rahim/seanime.git .
+
+# Stage 2: Node.js Builder
 FROM --platform=$BUILDPLATFORM node:latest AS node-builder
 
 # Set build args for cross-platform compatibility
@@ -10,18 +20,18 @@ ARG TARGETARCH
 WORKDIR /tmp/build
 
 # Copy only package files first for better caching
-COPY ./seanime-web/package*.json ./
+COPY --from=source /src/seanime-web/package*.json ./
 
 # Install dependencies with cache mount
 RUN --mount=type=cache,target=/root/.npm \
     npm install
 
 # Copy source code after dependencies are installed
-COPY ./seanime-web ./
+COPY --from=source /src/seanime-web ./
 
 RUN npm run build
 
-# Stage 2: Go Builder
+# Stage 3: Go Builder
 FROM --platform=$BUILDPLATFORM golang:latest AS go-builder
 
 ARG TARGETOS
@@ -31,14 +41,14 @@ ARG TARGETVARIANT
 WORKDIR /tmp/build
 
 # Copy only go.mod and go.sum first for better caching
-COPY go.mod go.sum ./
+COPY --from=source /src/go.mod /src/go.sum ./
 
 # Download Go modules with cache
 RUN --mount=type=cache,target=/go/pkg/mod \
     go mod download
 
 # Copy source code after dependencies are downloaded
-COPY . ./
+COPY --from=source /src/ ./
 COPY --from=node-builder /tmp/build/out /tmp/build/web
 
 # Handle armv7 (32-bit ARM) builds specifically
@@ -50,13 +60,13 @@ RUN --mount=type=cache,target=/go/pkg/mod \
     CGO_ENABLED=0 GOOS=$TARGETOS GOARCH=$TARGETARCH go build -o seanime -trimpath -ldflags="-s -w"; \
     fi
 
-# Stage 3: Common Base
+# Stage 4: Common Base
 FROM --platform=$TARGETPLATFORM alpine:latest AS common-base
 
 # Install common dependencies
 RUN apk add --no-cache ca-certificates tzdata curl
 
-# Stage 4: Default (Root) Variant
+# Stage 5: Default (Root) Variant
 FROM common-base AS base
 
 # Install standard ffmpeg
@@ -75,7 +85,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 CMD ["/app/seanime"]
 
-# Stage 5: Rootless Variant
+# Stage 6: Rootless Variant
 FROM common-base AS rootless
 
 # Create user
@@ -99,7 +109,7 @@ HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
 
 CMD ["/app/seanime"]
 
-# Stage 6: Hardware Acceleration Variant
+# Stage 7: Hardware Acceleration Variant
 FROM --platform=$TARGETPLATFORM alpine:edge AS hwaccel
 
 # Install common dependencies
