@@ -17,7 +17,7 @@ jobs:
       cuda_version: ${{ steps.cuda_version.outputs.CUDA_TAG }}
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Get latest release of 5rahim/seanime
         id: seanime_release
@@ -71,16 +71,16 @@ jobs:
     
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -94,7 +94,7 @@ jobs:
       - name: Extract metadata (Default)
         if: matrix.variant == 'default'
         id: meta_default
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: umagistr/seanime
           tags: |
@@ -103,7 +103,7 @@ jobs:
 
       - name: Build and push (Default)
         if: matrix.variant == 'default'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile
@@ -120,7 +120,7 @@ jobs:
       - name: Extract metadata (Rootless)
         if: matrix.variant == 'rootless'
         id: meta_rootless
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: umagistr/seanime
           tags: |
@@ -129,7 +129,7 @@ jobs:
 
       - name: Build and push (Rootless)
         if: matrix.variant == 'rootless'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile
@@ -146,7 +146,7 @@ jobs:
       - name: Extract metadata (HwAccel)
         if: matrix.variant == 'hwaccel'
         id: meta_hwaccel
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: umagistr/seanime
           tags: |
@@ -155,7 +155,7 @@ jobs:
 
       - name: Build and push (HwAccel)
         if: matrix.variant == 'hwaccel'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile
@@ -172,7 +172,7 @@ jobs:
       - name: Extract metadata (CUDA)
         if: matrix.variant == 'cuda'
         id: meta_cuda
-        uses: docker/metadata-action@v5
+        uses: docker/metadata-action@v6
         with:
           images: umagistr/seanime
           tags: |
@@ -182,7 +182,7 @@ jobs:
 
       - name: Build and push (CUDA)
         if: matrix.variant == 'cuda'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile.cuda
@@ -204,7 +204,7 @@ jobs:
       contents: write
     steps:
       - name: Check out the repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Update version file
         run: |

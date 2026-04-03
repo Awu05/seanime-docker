@@ -19,13 +19,13 @@ jobs:
     
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+        uses: docker/setup-qemu-action@v4
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
+        uses: docker/setup-buildx-action@v4
 
       - name: Get CUDA version
         if: matrix.variant == 'cuda'
@@ -53,7 +53,7 @@ jobs:
 
       - name: Build test image (Default)
         if: matrix.variant == 'default'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile
@@ -68,7 +68,7 @@ jobs:
 
       - name: Build test image (Rootless)
         if: matrix.variant == 'rootless'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile
@@ -83,7 +83,7 @@ jobs:
 
       - name: Build test image (HwAccel)
         if: matrix.variant == 'hwaccel'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile
@@ -98,7 +98,7 @@ jobs:
 
       - name: Build test image (CUDA)
         if: matrix.variant == 'cuda'
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile.cuda
