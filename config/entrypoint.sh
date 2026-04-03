@@ -27,9 +27,8 @@ print('@ByteArray(' + base64.b64encode(salt).decode() + ':' + base64.b64encode(d
 
 PASSWORD_HASH=$(generate_qbit_password "$QBIT_PASSWORD")
 
-# Write qBittorrent config if it doesn't exist
-if [ ! -f "$QBIT_CONF_DIR/qBittorrent.conf" ]; then
-    cat > "$QBIT_CONF_DIR/qBittorrent.conf" <<EOF
+# Always write qBittorrent config to ensure settings are correct
+cat > "$QBIT_CONF_DIR/qBittorrent.conf" <<EOF
 [Preferences]
 WebUI\Port=${QBIT_WEBUI_PORT}
 WebUI\Username=${QBIT_USERNAME}
@@ -47,19 +46,6 @@ Session\DefaultSavePath=/downloads
 [Meta]
 MigrationVersion=6
 EOF
-else
-    # Update existing config with new values
-    sed -i "s|^WebUI\\\\Port=.*|WebUI\\\\Port=${QBIT_WEBUI_PORT}|" "$QBIT_CONF_DIR/qBittorrent.conf"
-    sed -i "s|^WebUI\\\\Username=.*|WebUI\\\\Username=${QBIT_USERNAME}|" "$QBIT_CONF_DIR/qBittorrent.conf"
-    sed -i "s|^WebUI\\\\Password_PBKDF2=.*|WebUI\\\\Password_PBKDF2=\"${PASSWORD_HASH}\"|" "$QBIT_CONF_DIR/qBittorrent.conf"
-    # Ensure security settings are applied
-    grep -q "^WebUI\\\\CSRFProtection=" "$QBIT_CONF_DIR/qBittorrent.conf" || sed -i '/^\[Preferences\]/a WebUI\\CSRFProtection=false' "$QBIT_CONF_DIR/qBittorrent.conf"
-    grep -q "^WebUI\\\\MaxAuthenticationFailCount=" "$QBIT_CONF_DIR/qBittorrent.conf" || sed -i '/^\[Preferences\]/a WebUI\\MaxAuthenticationFailCount=0' "$QBIT_CONF_DIR/qBittorrent.conf"
-    grep -q "^WebUI\\\\HostHeaderValidation=" "$QBIT_CONF_DIR/qBittorrent.conf" || sed -i '/^\[Preferences\]/a WebUI\\HostHeaderValidation=false' "$QBIT_CONF_DIR/qBittorrent.conf"
-    sed -i "s|^WebUI\\\\CSRFProtection=.*|WebUI\\\\CSRFProtection=false|" "$QBIT_CONF_DIR/qBittorrent.conf"
-    sed -i "s|^WebUI\\\\MaxAuthenticationFailCount=.*|WebUI\\\\MaxAuthenticationFailCount=0|" "$QBIT_CONF_DIR/qBittorrent.conf"
-    sed -i "s|^WebUI\\\\HostHeaderValidation=.*|WebUI\\\\HostHeaderValidation=false|" "$QBIT_CONF_DIR/qBittorrent.conf"
-fi
 
 # Generate supervisord config with the configured port
 cat > /tmp/supervisord.conf <<EOF
@@ -68,21 +54,23 @@ nodaemon=true
 logfile=/var/log/supervisor/supervisord.log
 pidfile=/tmp/supervisord.pid
 
-[program:seanime]
-command=/app/seanime --host 0.0.0.0
-directory=/app
+[program:qbittorrent]
+command=qbittorrent-nox --webui-port=${QBIT_WEBUI_PORT}
 autostart=true
 autorestart=true
-startsecs=3
+priority=1
 stdout_logfile=/dev/stdout
 stdout_logfile_maxbytes=0
 stderr_logfile=/dev/stderr
 stderr_logfile_maxbytes=0
 
-[program:qbittorrent]
-command=qbittorrent-nox --webui-port=${QBIT_WEBUI_PORT}
+[program:seanime]
+command=/app/seanime --host 0.0.0.0
+directory=/app
 autostart=true
 autorestart=true
+priority=10
+startsecs=5
 stdout_logfile=/dev/stdout
 stdout_logfile_maxbytes=0
 stderr_logfile=/dev/stderr
