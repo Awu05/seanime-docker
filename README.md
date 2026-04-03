@@ -37,7 +37,7 @@ services:
     volumes:
       - /mnt/user/anime:/anime
       - /mnt/user/downloads:/downloads
-      - ./seanime-config:/root/.config/Seanime
+      - ./config:/root/.config
     environment:
       - QBIT_WEBUI_PORT=8081
       - QBIT_USERNAME=admin
@@ -79,11 +79,11 @@ Check the [examples](./examples) directory for complete configurations:
 
 #### Default Variant
 
-- `/root/.config/Seanime` - Configuration files.
+- `/root/.config` - Configuration files (Seanime + qBittorrent).
 
 #### Rootless & HwAccel Variants
 
-- `/home/seanime/.config/Seanime` - Configuration files.
+- `/home/seanime/.config` - Configuration files (Seanime + qBittorrent).
 - **Note**: Ensure the host directory for config is writable by UID 1000.
 
 #### Common

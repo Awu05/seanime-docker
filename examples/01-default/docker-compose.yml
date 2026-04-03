@@ -10,7 +10,7 @@ services:
       - "3211:43211"
       - "8081:8081" # qBittorrent WebUI
     volumes:
-      - ./seanime-config:/root/.config/Seanime
+      - ./config:/root/.config
       - ./anime:/anime
       - ./downloads:/downloads
     restart: unless-stopped
