@@ -7,7 +7,7 @@ port:
   tcp:43211:
     listening: true
     ip:
-      - 127.0.0.1
+      - 0.0.0.0
 
 process:
   seanime:

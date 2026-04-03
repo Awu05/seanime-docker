@@ -85,12 +85,6 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Prepare repository
-        run: |
-          chmod +x ./scripts/prepare.sh
-          ./scripts/prepare.sh ${{ needs.check.outputs.version }}
-        shell: bash
-
       - name: Prepare Dockerfile.cuda
         if: matrix.variant == 'cuda'
         run: |
@@ -116,6 +110,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           target: base
+          build-args: |
+            SEANIME_VERSION=${{ needs.check.outputs.version }}
           tags: ${{ steps.meta_default.outputs.tags }}
           labels: ${{ steps.meta_default.outputs.labels }}
           cache-from: type=gha,scope=build-default
@@ -140,6 +136,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           target: rootless
+          build-args: |
+            SEANIME_VERSION=${{ needs.check.outputs.version }}
           tags: ${{ steps.meta_rootless.outputs.tags }}
           labels: ${{ steps.meta_rootless.outputs.labels }}
           cache-from: type=gha,scope=build-rootless
@@ -164,6 +162,8 @@ jobs:
           push: true
           platforms: linux/amd64,linux/arm64,linux/arm/v7
           target: hwaccel
+          build-args: |
+            SEANIME_VERSION=${{ needs.check.outputs.version }}
           tags: ${{ steps.meta_hwaccel.outputs.tags }}
           labels: ${{ steps.meta_hwaccel.outputs.labels }}
           cache-from: type=gha,scope=build-hwaccel
@@ -188,6 +188,8 @@ jobs:
           file: ./Dockerfile.cuda
           push: true
           platforms: linux/amd64
+          build-args: |
+            SEANIME_VERSION=${{ needs.check.outputs.version }}
           tags: ${{ steps.meta_cuda.outputs.tags }}
           labels: ${{ steps.meta_cuda.outputs.labels }}
           cache-from: type=gha,scope=build-cuda
