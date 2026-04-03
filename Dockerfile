@@ -64,7 +64,7 @@ RUN --mount=type=cache,target=/go/pkg/mod \
 FROM --platform=$TARGETPLATFORM alpine:latest AS common-base
 
 # Install common dependencies
-RUN apk add --no-cache ca-certificates tzdata curl qbittorrent-nox supervisor
+RUN apk add --no-cache ca-certificates tzdata curl qbittorrent-nox supervisor openssl xxd
 
 # Create directories for supervisord
 RUN mkdir -p /var/log/supervisor
@@ -119,7 +119,7 @@ CMD ["/app/entrypoint.sh"]
 FROM --platform=$TARGETPLATFORM alpine:edge AS hwaccel
 
 # Install common dependencies
-RUN apk add --no-cache ca-certificates tzdata curl qbittorrent-nox supervisor
+RUN apk add --no-cache ca-certificates tzdata curl qbittorrent-nox supervisor openssl xxd
 
 # Create directories for supervisord
 RUN mkdir -p /var/log/supervisor

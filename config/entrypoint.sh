@@ -14,12 +14,24 @@ fi
 
 mkdir -p "$QBIT_CONF_DIR"
 
+# Generate PBKDF2-HMAC-SHA512 password hash (100,000 iterations)
+generate_qbit_password() {
+    SALT_HEX=$(openssl rand -hex 16)
+    HASH_HEX=$(openssl kdf -keylen 64 -kdfopt digest:SHA-512 -kdfopt pass:"$1" -kdfopt hexsalt:"$SALT_HEX" -kdfopt iter:100000 PBKDF2 | tr -d ':\n ')
+    SALT_B64=$(echo -n "$SALT_HEX" | xxd -r -p | openssl enc -base64 -A)
+    HASH_B64=$(echo -n "$HASH_HEX" | xxd -r -p | openssl enc -base64 -A)
+    echo "@ByteArray(${SALT_B64}:${HASH_B64})"
+}
+
+PASSWORD_HASH=$(generate_qbit_password "$QBIT_PASSWORD")
+
 # Write qBittorrent config if it doesn't exist
 if [ ! -f "$QBIT_CONF_DIR/qBittorrent.conf" ]; then
     cat > "$QBIT_CONF_DIR/qBittorrent.conf" <<EOF
 [Preferences]
 WebUI\Port=${QBIT_WEBUI_PORT}
 WebUI\Username=${QBIT_USERNAME}
+WebUI\Password_PBKDF2="${PASSWORD_HASH}"
 WebUI\CSRFProtection=false
 WebUI\ClickjackingProtection=false
 WebUI\HostHeaderValidation=false
@@ -31,11 +43,11 @@ Session\DefaultSavePath=/downloads
 [Meta]
 MigrationVersion=6
 EOF
-    # Let qBittorrent handle the default password on first run
-    # The default credentials will be shown in the container logs
 else
-    # Update port in existing config
+    # Update existing config with new values
     sed -i "s|^WebUI\\\\Port=.*|WebUI\\\\Port=${QBIT_WEBUI_PORT}|" "$QBIT_CONF_DIR/qBittorrent.conf"
+    sed -i "s|^WebUI\\\\Username=.*|WebUI\\\\Username=${QBIT_USERNAME}|" "$QBIT_CONF_DIR/qBittorrent.conf"
+    sed -i "s|^WebUI\\\\Password_PBKDF2=.*|WebUI\\\\Password_PBKDF2=\"${PASSWORD_HASH}\"|" "$QBIT_CONF_DIR/qBittorrent.conf"
 fi
 
 # Generate supervisord config with the configured port
