@@ -68,7 +68,6 @@ RUN apt-get update && \
     curl \
     qbittorrent-nox \
     supervisor \
-    openssl \
     && rm -rf /var/lib/apt/lists/*
 
 # Create directories for supervisord
