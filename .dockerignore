@@ -23,7 +23,6 @@ obj
 .next
 
 # Environment and config
-config
 .env*
 .dockerignore
 docker-compose.yml
