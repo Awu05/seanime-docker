@@ -217,6 +217,7 @@ jobs:
           echo "${{ needs.check.outputs.version }}" > .version
           git config user.name github-actions
           git config user.email github-actions@github.com
+          git pull --rebase
           git add .version
           git diff --cached --quiet || git commit -m "Update to seanime version ${{ needs.check.outputs.version }}"
           git push
