@@ -60,29 +60,38 @@ RUN --mount=type=cache,target=/go/pkg/mod \
 FROM nvidia/cuda:CUDA_VERSION_PLACEHOLDER
 
 # Install dependencies
-# We install ffmpeg from Ubuntu repositories as modern versions often include NVENC support
-# If specific jellyfin-ffmpeg is needed, it can be added here
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
     ca-certificates \
     tzdata \
     ffmpeg \
     curl \
+    qbittorrent-nox \
+    supervisor \
+    openssl \
     && rm -rf /var/lib/apt/lists/*
+
+# Create directories for supervisord
+RUN mkdir -p /var/log/supervisor
 
 # Create user
 RUN groupadd -g 1001 seanime && \
     useradd -u 1001 -g seanime -m -s /bin/bash seanime && \
     usermod -aG video seanime
 
-# Copy binary with ownership
+# Copy binary and entrypoint with ownership
 COPY --from=go-builder --chown=seanime:seanime /tmp/build/seanime /app/
+COPY --chown=seanime:seanime config/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Ensure directories are writable by seanime user
+RUN chown -R 1001:1001 /var/log/supervisor
 
 USER 1001
 WORKDIR /app
-EXPOSE 43211
+EXPOSE 43211 8081
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:43211 || exit 1
 
-CMD ["/app/seanime", "--host", "0.0.0.0"]
+CMD ["/app/entrypoint.sh"]

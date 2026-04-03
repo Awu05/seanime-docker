@@ -7,10 +7,14 @@ services:
     group_add:
       - video
     environment:
+      - QBIT_WEBUI_PORT=8081
+      - QBIT_USERNAME=admin
+      - QBIT_PASSWORD=adminadmin
       - NVIDIA_VISIBLE_DEVICES=all # or '0' for first GPU
       - NVIDIA_DRIVER_CAPABILITIES=all
     ports:
       - "3211:43211"
+      - "8081:8081" # qBittorrent WebUI
     volumes:
       - ./seanime-config:/home/seanime/.config/Seanime
       - ./anime:/anime

@@ -38,8 +38,13 @@ services:
       - /mnt/user/anime:/anime
       - /mnt/user/downloads:/downloads
       - ./seanime-config:/root/.config/Seanime
+    environment:
+      - QBIT_WEBUI_PORT=8081
+      - QBIT_USERNAME=admin
+      - QBIT_PASSWORD=adminadmin
     ports:
       - 3211:43211
+      - 8081:8081
     restart: unless-stopped
 ```
 
@@ -55,9 +60,20 @@ Check the [examples](./examples) directory for complete configurations:
 
 ## Configuration
 
+### Environment Variables
+
+| Variable         | Default      | Description                          |
+| ---------------- | ------------ | ------------------------------------ |
+| `QBIT_WEBUI_PORT`| `8081`       | qBittorrent WebUI port.              |
+| `QBIT_USERNAME`  | `admin`      | qBittorrent WebUI username.          |
+| `QBIT_PASSWORD`  | `adminadmin` | qBittorrent WebUI password.          |
+
 ### Ports
 
-`3211` - External port mapping to container's `43211`.
+| Port | Description |
+| --- | --- |
+| `3211` | External port mapping to container's `43211`. |
+| `8081` | qBittorrent WebUI (configurable via `QBIT_WEBUI_PORT`). |
 
 ### Volumes
 

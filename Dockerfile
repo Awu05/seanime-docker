@@ -64,7 +64,10 @@ RUN --mount=type=cache,target=/go/pkg/mod \
 FROM --platform=$TARGETPLATFORM alpine:latest AS common-base
 
 # Install common dependencies
-RUN apk add --no-cache ca-certificates tzdata curl
+RUN apk add --no-cache ca-certificates tzdata curl qbittorrent-nox supervisor openssl
+
+# Create directories for supervisord
+RUN mkdir -p /var/log/supervisor
 
 # Stage 5: Default (Root) Variant
 FROM common-base AS base
@@ -72,16 +75,18 @@ FROM common-base AS base
 # Install standard ffmpeg
 RUN apk add --no-cache ffmpeg
 
-# Copy binary
+# Copy binary and entrypoint
 COPY --from=go-builder /tmp/build/seanime /app/
+COPY config/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
 
 WORKDIR /app
-EXPOSE 43211
+EXPOSE 43211 8081
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:43211 || exit 1
 
-CMD ["/app/seanime", "--host", "0.0.0.0"]
+CMD ["/app/entrypoint.sh"]
 
 # Stage 6: Rootless Variant
 FROM common-base AS rootless
@@ -93,23 +98,31 @@ RUN addgroup -S seanime -g 1000 && \
 # Install standard ffmpeg
 RUN apk add --no-cache ffmpeg
 
-# Copy binary with ownership
+# Copy binary and entrypoint with ownership
 COPY --from=go-builder --chown=1000:1000 /tmp/build/seanime /app/
+COPY --chown=1000:1000 config/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Ensure directories are writable by seanime user
+RUN chown -R 1000:1000 /var/log/supervisor
 
 USER 1000
 WORKDIR /app
-EXPOSE 43211
+EXPOSE 43211 8081
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:43211 || exit 1
 
-CMD ["/app/seanime", "--host", "0.0.0.0"]
+CMD ["/app/entrypoint.sh"]
 
 # Stage 7: Hardware Acceleration Variant
 FROM --platform=$TARGETPLATFORM alpine:edge AS hwaccel
 
 # Install common dependencies
-RUN apk add --no-cache ca-certificates tzdata curl
+RUN apk add --no-cache ca-certificates tzdata curl qbittorrent-nox supervisor openssl
+
+# Create directories for supervisord
+RUN mkdir -p /var/log/supervisor
 
 ARG TARGETARCH
 
@@ -129,14 +142,19 @@ RUN apk update && \
     ln -s /usr/lib/jellyfin-ffmpeg/ffmpeg /usr/bin/ffmpeg && \
     ln -s /usr/lib/jellyfin-ffmpeg/ffprobe /usr/bin/ffprobe
 
-# Copy binary with ownership
+# Copy binary and entrypoint with ownership
 COPY --from=go-builder --chown=1000:1000 /tmp/build/seanime /app/
+COPY --chown=1000:1000 config/entrypoint.sh /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh
+
+# Ensure directories are writable by seanime user
+RUN chown -R 1000:1000 /var/log/supervisor
 
 USER 1000
 WORKDIR /app
-EXPOSE 43211
+EXPOSE 43211 8081
 
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
   CMD curl -f http://localhost:43211 || exit 1
 
-CMD ["/app/seanime", "--host", "0.0.0.0"]
+CMD ["/app/entrypoint.sh"]

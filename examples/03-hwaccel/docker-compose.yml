@@ -2,6 +2,10 @@ services:
   seanime:
     image: umagistr/seanime:latest-hwaccel
     container_name: seanime
+    environment:
+      - QBIT_WEBUI_PORT=8081
+      - QBIT_USERNAME=admin
+      - QBIT_PASSWORD=adminadmin
     devices:
       - /dev/dri:/dev/dri
     group_add:
@@ -9,6 +13,7 @@ services:
       - render
     ports:
       - "3211:43211"
+      - "8081:8081" # qBittorrent WebUI
     volumes:
       - ./seanime-config:/home/seanime/.config/Seanime
       - ./anime:/anime
