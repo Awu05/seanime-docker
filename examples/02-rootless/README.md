@@ -17,7 +17,7 @@ This setup runs Seanime as a non-root user (UID 1000) for improved security.
 
 - **Config Path**: `/home/seanime/.config/Seanime`
 - **User**: Runs as `seanime` (UID 1000) inside the container.
-- **Image**: `umagistr/seanime:latest-rootless`
+- **Image**: `ghcr.io/awu05/seanime-docker:latest-rootless`
 
 ## Important
 

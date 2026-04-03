@@ -7,7 +7,7 @@ for NVENC/NVDEC video transcoding.
 
 ## Image Details
 
-- **Image Tag**: `umagistr/seanime:latest-cuda`
+- **Image Tag**: `ghcr.io/awu05/seanime-docker:latest-cuda`
 - **Base Image**: `nvidia/cuda:CUDA_VERSION_PLACEHOLDER` (Ubuntu-based)
 - **Target**: Built from `Dockerfile.cuda`
 - **User**: `seanime` (UID 1001, GID 1001)
@@ -266,7 +266,7 @@ docker run --rm --runtime=nvidia nvidia/cuda:11.0-base nvidia-smi
 ```yaml
 services:
   seanime:
-    image: umagistr/seanime:latest-cuda
+    image: ghcr.io/awu05/seanime-docker:latest-cuda
     container_name: seanime
     runtime: nvidia
     group_add:
@@ -288,7 +288,7 @@ services:
 ```yaml
 services:
   seanime:
-    image: umagistr/seanime:latest-cuda
+    image: ghcr.io/awu05/seanime-docker:latest-cuda
     container_name: seanime
     group_add:
       - video
@@ -322,7 +322,7 @@ docker run -d \
   -v ./anime:/anime \
   -v ./downloads:/downloads \
   --restart unless-stopped \
-  umagistr/seanime:latest-cuda
+  ghcr.io/awu05/seanime-docker:latest-cuda
 ```
 
 ## Verification

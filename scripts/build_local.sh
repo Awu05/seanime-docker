@@ -36,15 +36,15 @@ chmod +x ./scripts/prepare.sh
 
 # Build Default image
 echo "Building Default image..."
-docker build -t umagistr/seanime:latest --target base .
+docker build -t ghcr.io/awu05/seanime-docker:latest --target base .
 
 # Build Rootless image
 echo "Building Rootless image..."
-docker build -t umagistr/seanime:latest-rootless --target rootless .
+docker build -t ghcr.io/awu05/seanime-docker:latest-rootless --target rootless .
 
 # Build HwAccel image
 echo "Building HwAccel image..."
-docker build -t umagistr/seanime:latest-hwaccel --target hwaccel .
+docker build -t ghcr.io/awu05/seanime-docker:latest-hwaccel --target hwaccel .
 
 # Build CUDA image
 echo "Building CUDA image..."
@@ -59,14 +59,14 @@ cp Dockerfile.cuda Dockerfile.cuda.bak
 sed -i "s/CUDA_VERSION_PLACEHOLDER/$CUDA_TAG/g" Dockerfile.cuda
 
 # Build CUDA image
-docker build -t umagistr/seanime:latest-cuda -f Dockerfile.cuda .
+docker build -t ghcr.io/awu05/seanime-docker:latest-cuda -f Dockerfile.cuda .
 
 # Restore Dockerfile.cuda
 mv Dockerfile.cuda.bak Dockerfile.cuda
 
 echo "Build complete!"
 echo "Images built:"
-echo "  - umagistr/seanime:latest"
-echo "  - umagistr/seanime:latest-rootless"
-echo "  - umagistr/seanime:latest-hwaccel"
-echo "  - umagistr/seanime:latest-cuda"
+echo "  - ghcr.io/awu05/seanime-docker:latest"
+echo "  - ghcr.io/awu05/seanime-docker:latest-rootless"
+echo "  - ghcr.io/awu05/seanime-docker:latest-hwaccel"
+echo "  - ghcr.io/awu05/seanime-docker:latest-cuda"

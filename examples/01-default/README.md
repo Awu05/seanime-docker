@@ -12,6 +12,6 @@ This is the standard setup for Seanime running as the root user.
 
 - **Config Path**: `/root/.config/Seanime`
 - **User**: Runs as `root` inside the container.
-- **Image**: `umagistr/seanime:latest`
+- **Image**: `ghcr.io/awu05/seanime-docker:latest`
 
 This configuration ensures compatibility with existing setups.

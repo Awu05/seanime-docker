@@ -7,7 +7,7 @@ standard FFmpeg.
 
 ## Image Details
 
-- **Image Tag**: `umagistr/seanime:latest-rootless`
+- **Image Tag**: `ghcr.io/awu05/seanime-docker:latest-rootless`
 - **Base Image**: `alpine:latest`
 - **Target**: `rootless` stage in Dockerfile
 - **User**: `seanime` (UID 1000, GID 1000)
@@ -158,7 +158,7 @@ None required for basic operation.
 ```yaml
 services:
   seanime:
-    image: umagistr/seanime:latest-rootless
+    image: ghcr.io/awu05/seanime-docker:latest-rootless
     container_name: seanime
     ports:
       - "3211:43211"
@@ -179,7 +179,7 @@ docker run -d \
   -v ./anime:/anime \
   -v ./downloads:/downloads \
   --restart unless-stopped \
-  umagistr/seanime:latest-rootless
+  ghcr.io/awu05/seanime-docker:latest-rootless
 ```
 
 ### Setting Permissions on Host

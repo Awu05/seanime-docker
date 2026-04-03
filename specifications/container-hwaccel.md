@@ -7,7 +7,7 @@ Jellyfin FFmpeg support for GPU-accelerated video transcoding.
 
 ## Image Details
 
-- **Image Tag**: `umagistr/seanime:latest-hwaccel`
+- **Image Tag**: `ghcr.io/awu05/seanime-docker:latest-hwaccel`
 - **Base Image**: `alpine:latest`
 - **Target**: `hwaccel` stage in Dockerfile
 - **User**: `seanime` (UID 1000, GID 1000)
@@ -208,7 +208,7 @@ None required for basic operation.
 ```yaml
 services:
   seanime:
-    image: umagistr/seanime:latest-hwaccel
+    image: ghcr.io/awu05/seanime-docker:latest-hwaccel
     container_name: seanime
     devices:
       - /dev/dri:/dev/dri
@@ -237,7 +237,7 @@ docker run -d \
   -v ./anime:/anime \
   -v ./downloads:/downloads \
   --restart unless-stopped \
-  umagistr/seanime:latest-hwaccel
+  ghcr.io/awu05/seanime-docker:latest-hwaccel
 ```
 
 ## Verification

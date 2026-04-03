@@ -1,6 +1,6 @@
 services:
   seanime:
-    image: umagistr/seanime:latest
+    image: ghcr.io/awu05/seanime-docker:latest
     container_name: seanime
     environment:
       - QBIT_WEBUI_PORT=8081

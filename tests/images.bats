@@ -39,10 +39,10 @@ setup() {
 }
 
 @test "latest: structure tests" {
-    echo "Running structure tests for umagistr/seanime:latest"
+    echo "Running structure tests for ghcr.io/awu05/seanime-docker:latest"
     echo "Config: $PROJECT_ROOT/tests/structure-tests.yaml"
     
-    run container-structure-test test --image umagistr/seanime:latest --config "$PROJECT_ROOT/tests/structure-tests.yaml"
+    run container-structure-test test --image ghcr.io/awu05/seanime-docker:latest --config "$PROJECT_ROOT/tests/structure-tests.yaml"
     
     if [ "$status" -ne 0 ]; then
         echo "FAILED: Structure tests failed with status $status"
@@ -57,11 +57,11 @@ setup() {
 
 @test "latest: goss tests" {
     export GOSS_FILE="goss-default.yaml"
-    echo "Running Goss tests for umagistr/seanime:latest"
+    echo "Running Goss tests for ghcr.io/awu05/seanime-docker:latest"
     echo "Goss file: $GOSS_FILE"
-    echo "Command: $DGOSS run umagistr/seanime:latest"
+    echo "Command: $DGOSS run ghcr.io/awu05/seanime-docker:latest"
     
-    run "$DGOSS" run umagistr/seanime:latest
+    run "$DGOSS" run ghcr.io/awu05/seanime-docker:latest
     
     if [ "$status" -ne 0 ]; then
         echo "FAILED: Goss tests failed with status $status"
@@ -75,10 +75,10 @@ setup() {
 }
 
 @test "latest-rootless: structure tests" {
-    echo "Running structure tests for umagistr/seanime:latest-rootless"
+    echo "Running structure tests for ghcr.io/awu05/seanime-docker:latest-rootless"
     echo "Config: $PROJECT_ROOT/tests/structure-tests.yaml"
     
-    run container-structure-test test --image umagistr/seanime:latest-rootless --config "$PROJECT_ROOT/tests/structure-tests.yaml"
+    run container-structure-test test --image ghcr.io/awu05/seanime-docker:latest-rootless --config "$PROJECT_ROOT/tests/structure-tests.yaml"
     
     if [ "$status" -ne 0 ]; then
         echo "FAILED: Structure tests failed with status $status"
@@ -93,11 +93,11 @@ setup() {
 
 @test "latest-rootless: goss tests" {
     export GOSS_FILE="goss-rootless.yaml"
-    echo "Running Goss tests for umagistr/seanime:latest-rootless"
+    echo "Running Goss tests for ghcr.io/awu05/seanime-docker:latest-rootless"
     echo "Goss file: $GOSS_FILE"
-    echo "Command: $DGOSS run umagistr/seanime:latest-rootless"
+    echo "Command: $DGOSS run ghcr.io/awu05/seanime-docker:latest-rootless"
     
-    run "$DGOSS" run umagistr/seanime:latest-rootless
+    run "$DGOSS" run ghcr.io/awu05/seanime-docker:latest-rootless
     
     if [ "$status" -ne 0 ]; then
         echo "FAILED: Goss tests failed with status $status"
@@ -111,10 +111,10 @@ setup() {
 }
 
 @test "latest-hwaccel: structure tests" {
-    echo "Running structure tests for umagistr/seanime:latest-hwaccel"
+    echo "Running structure tests for ghcr.io/awu05/seanime-docker:latest-hwaccel"
     echo "Config: $PROJECT_ROOT/tests/structure-tests.yaml"
     
-    run container-structure-test test --image umagistr/seanime:latest-hwaccel --config "$PROJECT_ROOT/tests/structure-tests.yaml"
+    run container-structure-test test --image ghcr.io/awu05/seanime-docker:latest-hwaccel --config "$PROJECT_ROOT/tests/structure-tests.yaml"
     
     if [ "$status" -ne 0 ]; then
         echo "FAILED: Structure tests failed with status $status"
@@ -129,11 +129,11 @@ setup() {
 
 @test "latest-hwaccel: goss tests" {
     export GOSS_FILE="goss-hwaccel.yaml"
-    echo "Running Goss tests for umagistr/seanime:latest-hwaccel"
+    echo "Running Goss tests for ghcr.io/awu05/seanime-docker:latest-hwaccel"
     echo "Goss file: $GOSS_FILE"
-    echo "Command: $DGOSS run umagistr/seanime:latest-hwaccel"
+    echo "Command: $DGOSS run ghcr.io/awu05/seanime-docker:latest-hwaccel"
     
-    run "$DGOSS" run umagistr/seanime:latest-hwaccel
+    run "$DGOSS" run ghcr.io/awu05/seanime-docker:latest-hwaccel
     
     if [ "$status" -ne 0 ]; then
         echo "FAILED: Goss tests failed with status $status"
@@ -147,10 +147,10 @@ setup() {
 }
 
 @test "latest-cuda: structure tests" {
-    echo "Running structure tests for umagistr/seanime:latest-cuda"
+    echo "Running structure tests for ghcr.io/awu05/seanime-docker:latest-cuda"
     echo "Config: $PROJECT_ROOT/tests/structure-tests.yaml"
     
-    run container-structure-test test --image umagistr/seanime:latest-cuda --config "$PROJECT_ROOT/tests/structure-tests.yaml"
+    run container-structure-test test --image ghcr.io/awu05/seanime-docker:latest-cuda --config "$PROJECT_ROOT/tests/structure-tests.yaml"
     
     if [ "$status" -ne 0 ]; then
         echo "FAILED: Structure tests failed with status $status"
@@ -165,11 +165,11 @@ setup() {
 
 @test "latest-cuda: goss tests" {
     export GOSS_FILE="goss-cuda.yaml"
-    echo "Running Goss tests for umagistr/seanime:latest-cuda"
+    echo "Running Goss tests for ghcr.io/awu05/seanime-docker:latest-cuda"
     echo "Goss file: $GOSS_FILE"
-    echo "Command: $DGOSS run umagistr/seanime:latest-cuda"
+    echo "Command: $DGOSS run ghcr.io/awu05/seanime-docker:latest-cuda"
     
-    run "$DGOSS" run umagistr/seanime:latest-cuda
+    run "$DGOSS" run ghcr.io/awu05/seanime-docker:latest-cuda
     
     if [ "$status" -ne 0 ]; then
         echo "FAILED: Goss tests failed with status $status"

@@ -99,7 +99,7 @@ jobs:
         id: meta_default
         uses: docker/metadata-action@v6
         with:
-          images: umagistr/seanime
+          images: ghcr.io/awu05/seanime-docker
           tags: |
             type=raw,value=${{ needs.check.outputs.version }}
             type=raw,value=latest
@@ -125,7 +125,7 @@ jobs:
         id: meta_rootless
         uses: docker/metadata-action@v6
         with:
-          images: umagistr/seanime
+          images: ghcr.io/awu05/seanime-docker
           tags: |
             type=raw,value=${{ needs.check.outputs.version }}-rootless
             type=raw,value=latest-rootless
@@ -151,7 +151,7 @@ jobs:
         id: meta_hwaccel
         uses: docker/metadata-action@v6
         with:
-          images: umagistr/seanime
+          images: ghcr.io/awu05/seanime-docker
           tags: |
             type=raw,value=${{ needs.check.outputs.version }}-hwaccel
             type=raw,value=latest-hwaccel
@@ -177,7 +177,7 @@ jobs:
         id: meta_cuda
         uses: docker/metadata-action@v6
         with:
-          images: umagistr/seanime
+          images: ghcr.io/awu05/seanime-docker
           tags: |
             type=raw,value=${{ needs.check.outputs.version }}-cuda
             type=raw,value=${{ needs.check.outputs.version }}-cuda-${{ needs.check.outputs.cuda_version }}

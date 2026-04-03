@@ -31,7 +31,7 @@ It uses the NVIDIA CUDA base image and includes FFmpeg with NVENC support.
 
 - **Config Path**: `/home/seanime/.config/Seanime`
 - **User**: Runs as `seanime` (UID 1001) inside the container.
-- **Image**: `umagistr/seanime:latest-cuda`
+- **Image**: `ghcr.io/awu05/seanime-docker:latest-cuda`
 - **GPU Access**: Configured via `runtime: nvidia` and environment variables.
 - **Groups**: Container user added to host `video` group for GPU access.
 

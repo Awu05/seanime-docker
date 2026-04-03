@@ -1,6 +1,6 @@
 # Seanime Docker
 
-[![Docker Pulls](https://img.shields.io/docker/pulls/umagistr/seanime.svg)](https://hub.docker.com/r/umagistr/seanime)
+[![Docker Pulls](https://img.shields.io/docker/pulls/ghcr.io/awu05/seanime-docker.svg)](https://hub.docker.com/r/ghcr.io/awu05/seanime-docker)
 [![Build, Test & Publish](https://github.com/umag/seanime-docker/actions/workflows/build-test-publish.yml/badge.svg)](https://github.com/umag/seanime-docker/actions/workflows/build-test-publish.yml)
 [![CI](https://github.com/umag/seanime-docker/actions/workflows/ci.yml/badge.svg)](https://github.com/umag/seanime-docker/actions/workflows/ci.yml)
 
@@ -32,7 +32,7 @@ The default image runs as root, similar to previous versions.
 ```yaml
 services:
   seanime:
-    image: umagistr/seanime:latest
+    image: ghcr.io/awu05/seanime-docker:latest
     container_name: seanime
     volumes:
       - /mnt/user/anime:/anime
@@ -104,7 +104,7 @@ To use hardware acceleration (Intel QSV/VAAPI):
 ```yaml
 services:
   seanime:
-    image: umagistr/seanime:latest-hwaccel
+    image: ghcr.io/awu05/seanime-docker:latest-hwaccel
     devices:
       - /dev/dri:/dev/dri
     # ... other config
@@ -121,7 +121,7 @@ To use NVIDIA hardware acceleration:
 ```yaml
 services:
   seanime:
-    image: umagistr/seanime:latest-cuda
+    image: ghcr.io/awu05/seanime-docker:latest-cuda
     runtime: nvidia
     environment:
       - NVIDIA_VISIBLE_DEVICES=all

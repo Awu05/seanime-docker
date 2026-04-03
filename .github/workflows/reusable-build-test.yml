@@ -46,9 +46,9 @@ jobs:
         id: image_tag
         run: |
           if [ "${{ matrix.variant }}" = "default" ]; then
-            echo "TAG=umagistr/seanime:latest" >> $GITHUB_OUTPUT
+            echo "TAG=ghcr.io/awu05/seanime-docker:latest" >> $GITHUB_OUTPUT
           else
-            echo "TAG=umagistr/seanime:latest-${{ matrix.variant }}" >> $GITHUB_OUTPUT
+            echo "TAG=ghcr.io/awu05/seanime-docker:latest-${{ matrix.variant }}" >> $GITHUB_OUTPUT
           fi
 
       - name: Build test image (Default)

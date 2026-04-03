@@ -149,10 +149,10 @@ and enable CI for repository changes.
 - **Steps**:
   - Fetches the latest release tag from `5rahim/seanime` (or uses provided tag).
   - Runs `scripts/prepare.sh`.
-  - Builds `umagistr/seanime:latest`.
-  - Builds `umagistr/seanime:latest-rootless`.
-  - Builds `umagistr/seanime:latest-hwaccel`.
+  - Builds `ghcr.io/awu05/seanime-docker:latest`.
+  - Builds `ghcr.io/awu05/seanime-docker:latest-rootless`.
+  - Builds `ghcr.io/awu05/seanime-docker:latest-hwaccel`.
   - Fetches latest CUDA version using `scripts/get-cuda-version.sh`.
   - Updates `Dockerfile.cuda` temporarily.
-  - Builds `umagistr/seanime:latest-cuda`.
+  - Builds `ghcr.io/awu05/seanime-docker:latest-cuda`.
   - Restores original `Dockerfile.cuda`.

@@ -6,7 +6,7 @@ The default Seanime container variant running as root user with standard FFmpeg.
 
 ## Image Details
 
-- **Image Tag**: `umagistr/seanime:latest`
+- **Image Tag**: `ghcr.io/awu05/seanime-docker:latest`
 - **Base Image**: `alpine:latest`
 - **Target**: `base` stage in Dockerfile
 - **User**: `root` (UID 0)
@@ -138,7 +138,7 @@ None required for basic operation.
 ```yaml
 services:
     seanime:
-        image: umagistr/seanime:latest
+        image: ghcr.io/awu05/seanime-docker:latest
         container_name: seanime
         ports:
             - "3211:43211"
@@ -159,7 +159,7 @@ docker run -d \
   -v ./anime:/anime \
   -v ./downloads:/downloads \
   --restart unless-stopped \
-  umagistr/seanime:latest
+  ghcr.io/awu05/seanime-docker:latest
 ```
 
 ## Limitations

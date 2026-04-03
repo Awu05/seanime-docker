@@ -29,7 +29,7 @@ uses the rootless variant as a base.
 
 - **Config Path**: `/home/seanime/.config/Seanime`
 - **User**: Runs as `seanime` (UID 1000) inside the container.
-- **Image**: `umagistr/seanime:latest-hwaccel`
+- **Image**: `ghcr.io/awu05/seanime-docker:latest-hwaccel`
 - **Devices**: Passes `/dev/dri` to the container.
 - **Groups**: Container user added to host `video` and `render` groups for GPU
   access.
