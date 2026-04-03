@@ -14,13 +14,15 @@ fi
 
 mkdir -p "$QBIT_CONF_DIR"
 
-# Generate PBKDF2-HMAC-SHA512 password hash (100,000 iterations)
+# Generate PBKDF2-HMAC-SHA512 password hash (100,000 iterations) using Python
 generate_qbit_password() {
-    SALT_HEX=$(openssl rand -hex 16)
-    HASH_HEX=$(openssl kdf -keylen 64 -kdfopt digest:SHA-512 -kdfopt pass:"$1" -kdfopt hexsalt:"$SALT_HEX" -kdfopt iter:100000 PBKDF2 | tr -d ':\n ')
-    SALT_B64=$(echo -n "$SALT_HEX" | xxd -r -p | openssl enc -base64 -A)
-    HASH_B64=$(echo -n "$HASH_HEX" | xxd -r -p | openssl enc -base64 -A)
-    echo "@ByteArray(${SALT_B64}:${HASH_B64})"
+    python3 -c "
+import hashlib, os, base64, sys
+password = sys.argv[1].encode()
+salt = os.urandom(16)
+dk = hashlib.pbkdf2_hmac('sha512', password, salt, 100000)
+print('@ByteArray(' + base64.b64encode(salt).decode() + ':' + base64.b64encode(dk).decode() + ')')
+" "$1"
 }
 
 PASSWORD_HASH=$(generate_qbit_password "$QBIT_PASSWORD")
@@ -36,6 +38,8 @@ WebUI\CSRFProtection=false
 WebUI\ClickjackingProtection=false
 WebUI\HostHeaderValidation=false
 WebUI\LocalHostAuth=false
+WebUI\MaxAuthenticationFailCount=0
+WebUI\BanDuration=0
 
 [BitTorrent]
 Session\DefaultSavePath=/downloads
@@ -48,6 +52,13 @@ else
     sed -i "s|^WebUI\\\\Port=.*|WebUI\\\\Port=${QBIT_WEBUI_PORT}|" "$QBIT_CONF_DIR/qBittorrent.conf"
     sed -i "s|^WebUI\\\\Username=.*|WebUI\\\\Username=${QBIT_USERNAME}|" "$QBIT_CONF_DIR/qBittorrent.conf"
     sed -i "s|^WebUI\\\\Password_PBKDF2=.*|WebUI\\\\Password_PBKDF2=\"${PASSWORD_HASH}\"|" "$QBIT_CONF_DIR/qBittorrent.conf"
+    # Ensure security settings are applied
+    grep -q "^WebUI\\\\CSRFProtection=" "$QBIT_CONF_DIR/qBittorrent.conf" || sed -i '/^\[Preferences\]/a WebUI\\CSRFProtection=false' "$QBIT_CONF_DIR/qBittorrent.conf"
+    grep -q "^WebUI\\\\MaxAuthenticationFailCount=" "$QBIT_CONF_DIR/qBittorrent.conf" || sed -i '/^\[Preferences\]/a WebUI\\MaxAuthenticationFailCount=0' "$QBIT_CONF_DIR/qBittorrent.conf"
+    grep -q "^WebUI\\\\HostHeaderValidation=" "$QBIT_CONF_DIR/qBittorrent.conf" || sed -i '/^\[Preferences\]/a WebUI\\HostHeaderValidation=false' "$QBIT_CONF_DIR/qBittorrent.conf"
+    sed -i "s|^WebUI\\\\CSRFProtection=.*|WebUI\\\\CSRFProtection=false|" "$QBIT_CONF_DIR/qBittorrent.conf"
+    sed -i "s|^WebUI\\\\MaxAuthenticationFailCount=.*|WebUI\\\\MaxAuthenticationFailCount=0|" "$QBIT_CONF_DIR/qBittorrent.conf"
+    sed -i "s|^WebUI\\\\HostHeaderValidation=.*|WebUI\\\\HostHeaderValidation=false|" "$QBIT_CONF_DIR/qBittorrent.conf"
 fi
 
 # Generate supervisord config with the configured port
@@ -62,6 +73,7 @@ command=/app/seanime --host 0.0.0.0
 directory=/app
 autostart=true
 autorestart=true
+startsecs=3
 stdout_logfile=/dev/stdout
 stdout_logfile_maxbytes=0
 stderr_logfile=/dev/stderr
