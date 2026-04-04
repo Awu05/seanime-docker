@@ -26,9 +26,11 @@ print('@ByteArray(' + base64.b64encode(salt).decode() + ':' + base64.b64encode(d
 }
 
 PASSWORD_HASH=$(generate_qbit_password "$QBIT_PASSWORD")
+QBIT_CONF="$QBIT_CONF_DIR/qBittorrent.conf"
 
-# Always write qBittorrent config to ensure settings are correct
-cat > "$QBIT_CONF_DIR/qBittorrent.conf" <<EOF
+# Write qBittorrent config on first run only
+if [ ! -f "$QBIT_CONF" ]; then
+    cat > "$QBIT_CONF" <<EOF
 [Preferences]
 WebUI\Port=${QBIT_WEBUI_PORT}
 WebUI\Username=${QBIT_USERNAME}
@@ -46,6 +48,32 @@ Session\DefaultSavePath=/downloads
 [Meta]
 MigrationVersion=6
 EOF
+else
+    # Helper to update or add a setting under [Preferences]
+    update_setting() {
+        KEY="$1"
+        VALUE="$2"
+        ESCAPED_KEY=$(echo "$KEY" | sed 's|\\|\\\\|g')
+        if grep -q "^${ESCAPED_KEY}=" "$QBIT_CONF"; then
+            sed -i "s|^${ESCAPED_KEY}=.*|${KEY}=${VALUE}|" "$QBIT_CONF"
+        else
+            sed -i "/^\[Preferences\]/a ${KEY}=${VALUE}" "$QBIT_CONF"
+        fi
+    }
+
+    # Update credentials and port from env vars
+    update_setting "WebUI\\\\Port" "${QBIT_WEBUI_PORT}"
+    update_setting "WebUI\\\\Username" "${QBIT_USERNAME}"
+    update_setting "WebUI\\\\Password_PBKDF2" "\"${PASSWORD_HASH}\""
+
+    # Ensure security settings are present
+    update_setting "WebUI\\\\CSRFProtection" "false"
+    update_setting "WebUI\\\\ClickjackingProtection" "false"
+    update_setting "WebUI\\\\HostHeaderValidation" "false"
+    update_setting "WebUI\\\\LocalHostAuth" "false"
+    update_setting "WebUI\\\\MaxAuthenticationFailCount" "0"
+    update_setting "WebUI\\\\BanDuration" "0"
+fi
 
 # Generate supervisord config with the configured port
 cat > /tmp/supervisord.conf <<EOF
