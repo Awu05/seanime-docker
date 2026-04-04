@@ -8,6 +8,8 @@ on:
     branches: ["main"]
     paths:
       - 'Dockerfile*'
+      - 'config/**'
+      - '.version'
       - '.github/workflows/docker-publish.yml'
 
 env:
