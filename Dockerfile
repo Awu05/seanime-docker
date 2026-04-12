@@ -8,7 +8,7 @@ RUN apk add --no-cache git
 ARG SEANIME_VERSION=main
 
 WORKDIR /src
-RUN git clone --depth 1 --branch ${SEANIME_VERSION} https://github.com/Awu05/seanime.git .
+RUN git clone --depth 1 --branch ${SEANIME_VERSION} https://github.com/5rahim/seanime.git .
 
 # Stage 2: Node.js Builder
 FROM --platform=$BUILDPLATFORM node:latest AS node-builder

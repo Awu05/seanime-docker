@@ -28,13 +28,10 @@ jobs:
       - name: Check out the repo
         uses: actions/checkout@v6
 
-      - name: Get latest release of Awu05/seanime
+      - name: Get latest release of 5rahim/seanime
         id: seanime_release
         run: |
-          LATEST_RELEASE=$(curl -s https://api.github.com/repos/Awu05/seanime/releases/latest | jq -r .tag_name)
-          if [ "$LATEST_RELEASE" = "null" ] || [ -z "$LATEST_RELEASE" ]; then
-            LATEST_RELEASE=$(curl -s https://api.github.com/repos/5rahim/seanime/releases/latest | jq -r .tag_name)
-          fi
+          LATEST_RELEASE=$(curl -s https://api.github.com/repos/5rahim/seanime/releases/latest | jq -r .tag_name)
           echo "LATEST_RELEASE=${LATEST_RELEASE}" >> $GITHUB_OUTPUT
           echo "Latest seanime release: ${LATEST_RELEASE}"
 
