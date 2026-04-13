@@ -32,6 +32,10 @@ jobs:
         id: seanime_release
         run: |
           LATEST_RELEASE=$(curl -s https://api.github.com/repos/5rahim/seanime/releases/latest | jq -r .tag_name)
+          if [ "$LATEST_RELEASE" = "null" ] || [ -z "$LATEST_RELEASE" ]; then
+            LATEST_RELEASE=$(cat .version 2>/dev/null || echo "main")
+            echo "API returned null, falling back to .version: ${LATEST_RELEASE}"
+          fi
           echo "LATEST_RELEASE=${LATEST_RELEASE}" >> $GITHUB_OUTPUT
           echo "Latest seanime release: ${LATEST_RELEASE}"
 
