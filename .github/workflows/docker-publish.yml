@@ -38,19 +38,20 @@ jobs:
       - name: Check if build is needed
         id: check_build
         run: |
-          # Always build on push or manual trigger
-          if [ "${{ github.event_name }}" = "push" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          CURRENT_VERSION=$(cat .version 2>/dev/null || echo "none")
+          LATEST="${{ steps.seanime_release.outputs.LATEST_RELEASE }}"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
             echo "BUILD_NEEDED=true" >> $GITHUB_OUTPUT
-            echo "Build triggered by ${{ github.event_name }}."
+            echo "Manual trigger. Build needed."
+          elif [ "${{ github.event_name }}" = "push" ]; then
+            echo "BUILD_NEEDED=true" >> $GITHUB_OUTPUT
+            echo "Push trigger. Build needed."
+          elif [ "$LATEST" != "$CURRENT_VERSION" ]; then
+            echo "BUILD_NEEDED=true" >> $GITHUB_OUTPUT
+            echo "New version detected: $LATEST (current: $CURRENT_VERSION). Build needed."
           else
-            CURRENT_VERSION=$(cat .version 2>/dev/null || echo "none")
-            if [ "${{ steps.seanime_release.outputs.LATEST_RELEASE }}" != "${CURRENT_VERSION}" ]; then
-              echo "BUILD_NEEDED=true" >> $GITHUB_OUTPUT
-              echo "New version detected. Build needed."
-            else
-              echo "BUILD_NEEDED=false" >> $GITHUB_OUTPUT
-              echo "No new version. Skipping build."
-            fi
+            echo "BUILD_NEEDED=false" >> $GITHUB_OUTPUT
+            echo "No new version. Current: $CURRENT_VERSION. Skipping build."
           fi
 
       - name: Get latest CUDA version
