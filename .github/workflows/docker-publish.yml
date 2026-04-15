@@ -3,7 +3,7 @@ name: Docker Build and Publish
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 * * * *' # Run hourly to check for new releases
+    - cron: '0 0 * * *' # Run daily to check for new releases
   push:
     branches: ["main"]
     paths:
@@ -221,10 +221,10 @@ jobs:
 
       - name: Update version file
         run: |
-          echo "${{ needs.check.outputs.version }}" > .version
           git config user.name github-actions
           git config user.email github-actions@github.com
           git pull --rebase
+          echo "${{ needs.check.outputs.version }}" > .version
           git add .version
           git diff --cached --quiet || git commit -m "Update to seanime version ${{ needs.check.outputs.version }}"
           git push
